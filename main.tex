@@ -64,34 +64,28 @@ A MST-KNN based Multiclass Classification By Using Class Distance Measure For Si
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Multiclass Classification is an integral part of classification in data mining.Sentiment analysis, text classification, hand-written recognition,traffic sign recognition are the applications where multiclass classification is useful.The existing methods for multiclass classification are One-vs-One (OvO), One-vs-All (OvA), DAGSVM, Binary tree SVM(BTS).Binary tree SVM were also extented to multi-way tree where more than two child nodes can be created.The proposed approach uses existing multi-way tree structure.A better class distance measure is used to find similar classes based on within and between class distance.A MST-KNN approach is applied along with class distance measure which results in better grouping/clustering of classes and avoid data imbalanced problem of One-vs-All method.The proposed approach is compared with other existing methods and experiments were performed on many data sets which demonstrates that our method increases overall accuracy of classification where number of instances and classes are high. 
+Multiclass Classification is an integral part of classification in data mining. Multiclass classification is useful in various applications like, Sentiment Analysis, Text Classification, Hand-written Recognition, Traffic Sign Recognition etc. There are many different strategies for solving multiclass classification problem such as One-vs-One (OvO), One-vs-All (OvA), DAGSVM and  Binary tree SVM(BTS). Since there were some limitations in these strategies in terms of number of classifiers and training time, therefore, later on binary tree SVM was extended to multi-way tree where more than two child nodes can be created. The proposed approach uses existing multi-way tree structure for similarity clustering of classes into multiple nodes. A novel class distance measure is introduced to find similar classes based on within and between class distance. A MST-KNN approach is applied along with the class distance measure which results in better grouping/clustering of similar classes. Hence, similarity clustering method provides better result in terms of accuracy, classifiers required and training time. It also reduces the data imbalance problem of One-vs-All method. The proposed approach is compared with other existing approaches and experiments were performed on a number of data sets which demonstrates that the proposed method increases overall accuracy of classification where number of instances and classes are high.
+\vspace{0.2cm}\newline
+\textit{Keywords - Multiclass classification, Multi-way tree, Information gain, Minimum spanning tree, K-nearest neighbor, Support vector machine, One-vs-all}  
 \end{abstract}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-Data mining is extraction of useful information or knowledge from large volume of data.These large volume of data is explored and analyzed so as to discover some meaningful patterns and useful information.It can be used in any of the applications such as Fraud Detection, Market Analysis, Production Control, Customer Retention.Three of the major data mining techniques are regression, classification and clustering.Classification is one of those methods which makes the analysis of very large data samples effective.
+Data mining is defined as extraction of useful information or knowledge from large volume of data. This large volume of data is explored and analyzed so as to discover some meaningful patterns and useful information. Classification is one of the technique in data mining used for effective analysis of large datasets.
 \par
-\par 
-Classification is a process that assigns items in a collection to target categories or classes.Classification predicts a certain output based on some input.For predicting the correct outcome the algorithm takes a training set containing a set of attributes/features as input alongwith the target attribute in which the samples are to be classified.Algorithm discovers the relationships between the attributes that helps in predicting the outcome.Then the algorithm is provided with an unseen data set known as testing(prediction) set.The testing data set contains same attributes set and excludes the target attribute.The algorithm completely analyses the input and produces a prediction.
-\par 
-There are two types of classification problems – Binary Classification and Multiclass Classification.Binary classification is the task of classifying the elements of a given set into two classes on the basis of a classification function that assigns its class to each data item.
+Classification is a supervised learning algorithm that assigns items in a set to target classes. Classification predicts a certain output based on some input. The classification algorithm takes a training set, which contains a set of attributes/features as input along with the target attribute in which the samples are to be classified. It discovers the relationships between the attributes that helps in predicting the outcome. It is then provided with an unseen data set known as testing (prediction) set which contains same attributes excluding the target attribute. The classification algorithm completely analyses the input and produces a prediction. There are two types of classification problems namely, Binary Classification and Multiclass Classification.
+Binary classification is the task of classifying the elements of a given set into two classes on the basis of a classification function that assigns its class to each data item. Multiclass Classification involves assigning an element to one of the several classes (i.e, multiple classes). Each training data point belongs to one of the N different classes. The goal is to construct a function or classifier which will predict the class correctly when an unseen data point is given.
 \par
-Multiclass Classification which involves assigning an element to one of several classes (i.e, multiple classes). Each training data point belongs to one of N different classes.The goal is to construct a function or classifier which will predict the class correctly when a new data point is given.
+In real world, there are mainly multiclass classification problems, so to accurately classify data samples into large number of classes is a challenging task. Multiclass classification problem can be solved with several strategies using SVM such as One-Against-One (OAO)[6], One-Against-All (OAA)[6], Directed Acyclic Graph SVM (DAGSVM)[6] and Binary Tree SVM[6][11](BTS). The original problem is decomposed into multiple binary problems. Training those multiple binary problems by original SVM to get several SVMs, then combining those SVMs to do the classification. OAO method divides original problem into multiple binary problems, one classifier is needed to train each pair of class. The number of binary classifiers needed are N(N-1)/2, for a N class problem. Drawback of this method is that as the number of classes increase, number of classifiers are also increased. In, OvA each class is trained against the rest (N - 1) classes, where total N classifiers are required for N class problem. Drawback of this method is data imbalance problem.
 \par
-SVMs were initially designed for binary classification problem.SVM have been applied in many fields such as image classification ,handwritten digit and character recognition,and some other classification.In real world, there are mainly multiclass classification problems, so to accurately classify data samples into large number of classes is a challenging task.In multiclass classification, each data sample belongs to one of N classes.
-There are two approaches to solve multiclass SVM :
-First, considering all data at once i.e, constructing N SVMs decision functions for N class problem.Optimizing N binary SVMs problems into one big optimal formulation.Although this approach is difficult to implement.Second, dividing the multiclass problem into multiple binary problems.Training those multiple binary problems by original SVM to get several SVMs, then combining those SVMs to do the classification.Second approach has several methods such as One-against-One (OAO)[5], One-against-All (OAA)[5], directed acyclic graph SVM (DAGSVM)[5] and binary tree SVM[13](BTS).OAO method divides original problem into multiple binary problems, one classifier is needed to train each pair of class.The number of binary classifiers needed is N(N-1)/2, for a N class problem.Drawback of this method is that as the number of classes increases, number of classifiers are also increased.In, OvA each class is trained against the rest (N - 1) classes, where total N classifiers are required for N class problem.Drawback of this method is data imbalance problem.
+Decision Directed Acyclic Graph(DDAG) training phase is same as that of OvO method. The number of classifiers required for N class problem in one classification is equal to N(N-1)/2. It's drawback is same as that of OAO method. Binary tree of SVM (BTS) builds a binary tree structure. In each non-leaf node of the binary tree, to train one SVM classifier two classes are randomly selected. For each child node, the classifier divides the data into two sub-nodes clusters. This process is continued until each leaf node contains only one class data samples.
+Later, Divide-by-2[5] (DB2) approach was also proposed, which builds a binary tree structure. The approach splits classes into two clusters based on grand mean or k-means algorithm. Binary tree structure is further extended to Multi-way[1] tree structure where multiple child nodes(\textgreater2) are created and classes are grouped together on the basis of similarity between classes. On each node of the multi-way tree, classifiers are applied on each group of classes.
+These methods has some limitations in terms of grouping of similar classes, total number of classifiers and training time required. The main drawback of the existing clustering approach is in grouping of similar classes.Suppose we have three classes A, B and C. Class A is found to be similar to class B and class B is similar to Class C using similarity method. All three are considered to be similar and grouped in one cluster even if A and C are not similar to each other. As the Similarity clustering method in existing approaches used either distance or mean of classes to find similarities between classes which doesn't provide efficient result. So, better grouping techniques are required which groups classes correctly in earlier stage so as to reduce training time and number of classifiers.
 \par
-Decision Directed Acyclic Graph (DDAG) training phase is same as that of OvO method.The number of classifiers required for N class problem in one classification is equal to N(N-1)/2.The drawback is same as that of OAO method.Binary tree of SVM (BTS) builds a binary tree structure.In each non-leaf node of the binary tree, to train one SVM classifier two classes are randomly selected.For each child node, the classifier divides the data into two sub-nodes clusters.This process is continued until each leaf node contains only one class data samples.
-Later, Divide-by-2 (DB2) approach was also proposed, which builds a binary tree structure.The approach splits classes into two clusters based on grand mean or k-means algorithm.
-
-Binary tree structure is further extended to Multi-way tree structure where multiple child nodes(\textgreater2) are created and classes are grouped together on the basis of similarity.On each node of the multi-way tree, classifiers are applied on each group of classes.These methods has some limitations in terms of grouping of classes, total number of classifiers and training time.Therefore, new approach for multi-way tree structure is needed which accurately classifies the data samples considering drawbacks of all other methods. 
-\vspace{0.5cm}
-\par
-Initially, in our proposed approach, best features are selected using Information Gain feature selection method.The second next step is similar classes clustering, where similar classes are grouped into different clusters.
-We proposed a similarity clustering method, which evaluates similarity between classes using a class distance measure which considers the distribution(within class,prior probability,total number of samples in each class) and distance(between class) of the data in feature space.The class distance measure includes both within class and between class distance between classes.Based on class distance measure MST-KNN approach is applied which further leads to grouping of similar classes.The third step is training of groups,where OvA is applied to train similar classes groups.Then, in next step, one node gets divided into  multiple sub-nodes where each node represents a single group.We repeat the whole process until samples of each class reaches the leaf-node, the multi-way tree gets constructed.The experiments performed on various data sets shows that our proposed method performs well than other existing methods in terms of overall accuracy,  training time and number of classifiers required in one classification.
+In our proposed approach, best features are selected using Information Gain feature selection method. The second step is similar classes clustering, where similar classes are grouped into different clusters. Classes in one cluster are similar to each other and dissimilar to the classes of other clusters. We proposed a similarity clustering method, which evaluates similarity between classes using a class distance measure which considers the distribution (within class, prior probability, total number of samples in each class) and distance (between class) of the data in feature space. The class distance measure includes both within class and between class distance between classes. The measure used represents a similarity value between every pair of classes. Based on class distance measure, MST-KNN[7][8] approach is applied which further leads to grouping of similar classes. The third step is training, where OvA is applied to train groups of similar classes. Each node gets divided into multiple sub-nodes where each node represents a single group. We repeat the whole process until samples of each class reaches the leaf-node and the multi-way tree gets constructed. The proposed similarity clustering method provides better result as the grouping is based on class distance measure and MST-KNN.
+The experiments performed on various data sets show that the proposed method performs better than other existing approaches in terms of overall accuracy,  training time and number of classifiers required in one classification.
 
 \par
 Organization of paper is as follow. In Section 2, basics of SVMs is explained. In Section 3, proposed approach is explained in detail where we focus on how to perform similar classes clustering approach.In Section 4, we perform comparison based experiments on various multiclass classification data-sets.Section 5, concludes our proposed approach.
@@ -99,7 +93,7 @@ Organization of paper is as follow. In Section 2, basics of SVMs is explained. I
 
 \section{SVM}
 
-A support vector machine[4] is a supervised classification method.It is used for classification and regression both for binary and multi-class problems.It supports text mining, pattern recognition, nested data problems.There are mainly two kinds of problem : \begin{itemize}
+A support vector machine is a supervised classification method.It is used for classification and regression both for binary and multi-class problems.It supports text mining, pattern recognition, nested data problems.There are mainly two kinds of problem : \begin{itemize}
 \item Linearly separable, 
 \item Non-Linearly separable problem.
 \end{itemize}
@@ -114,60 +108,61 @@ The optimization problem can be formulated as \\
 $\hspace{0.5cm} min\frac{1}{2}W\textsuperscript{T}W\hspace{1cm}
 s.t.:Y_{i}(WX_{i}+B) >=1 \hspace{0.65cm}(2)$ \\
 
-The solution of optimization problem is given by Lagrangian 
-\[\hspace{1cm}L_{P} = \frac{1}{2}||W||\textsuperscript{2} - \sum_{i=1}^{N} A_{i}[Y_{j}(WX_{i}+B) -1]  \hspace{0.9cm}(3) \]
-When A\textsubscript{i} are solved, W can be calculated as 
-\[\hspace{2.5cm}W = \sum_{i=1}^{N} A_{i}Y_{i}X_{i} \hspace{3cm}(4)\]   
+%The solution of optimization problem is given by Lagrangian 
+%\[\hspace{1cm}L_{P} = \frac{1}{2}||W||\textsuperscript{2} - \sum_{i=1}^{N} A_{i}[Y_{j}(WX_{i}+B) -1]  \hspace{0.9cm}(3) \]
+%When A\textsubscript{i} are solved, W can be calculated as 
+%\[\hspace{2.5cm}W = \sum_{i=1}^{N} A_{i}Y_{i}X_{i} \hspace{3cm}(4)\]   
 For the nonlinear problem, by using kernel function ψ(.) the problems can be solved. 
-\[\hspace{1cm}max L_{D} = \sum_{i=1}^{N} A_{i} - \frac{1}{2}\sum_{i,j}^{N} A_{i}A_{j}Y_{i}Y_{j}k(X_{i}\,X_{j}) \hspace{0.5cm}(5)\] 
+\[\hspace{1cm}max L_{D} = \sum_{i=1}^{N} A_{i} - \frac{1}{2}\sum_{i,j}^{N} A_{i}A_{j}Y_{i}Y_{j}k(X_{i}\,X_{j}) \hspace{0.5cm}(3)\] 
 $where\hspace{0.2cm}[k(X_{i}\,X_{j})= exp(\Gamma||X_{i}-X_{j}||\textsuperscript{2}_]$, which is the radial basis function (RBF) kernel function used in the proposed approach.
 
 
 \section{Proposed Approach}
-
+This section describes about feature selection and similarity clustering method of the proposed approach in detail. 
 \subsection{Feature Selection}
 \par 
 Feature selection[2] algorithm focuses on selecting relevant features for classification. A filter based feature selection method used in this approach. It's working is as : In the first step, it ranks features based on some criteria, each feature is ranked independently of the feature space. In the second step, the feature with top ranking is chosen.The filter based feature selection method used is :
 \par
-\textbf{Information Gain}: Information gain[2] measures the amount of information in bits about the class prediction, if the only information available is the presence of a feature and the corresponding class distribution.Given, T\textsubscript{X} is the training samples set, x\textsubscript{i} the vector of i\textsuperscript{th} variables in this set, T\textsubscript{xi=v}/T\textsubscript{X} the fraction of examples of the i\textsuperscript{th} variable having value v : 
+\textbf{Information Gain}: Information gain[2] is the amount of information gained by knowing the value of each attribute.Given, T\textsubscript{X} is the training samples set, x\textsubscript{i} the vector of i\textsuperscript{th} variables in this set, T\textsubscript{xi=v}/T\textsubscript{X} the fraction of examples of the i\textsuperscript{th} variable having value v : 
 \newline
-% \[\hspace{1cm}S_{k} = \frac{\sum_{i=1}^{K} n_{i}(\mu_{ij}-\mu_{i})\textsuperscript{2}}{\sum_{i=1}^{K}n_{j}\rho\textsuperscript{2}_{ij}} \hspace{2cm}(3.1) \] \\  
 
-\hspace{1cm}IG(T\textsubscript{X}, x\textsubscript{i}) = H(T\textsubscript{X}) − $  \sum_{v=values(x\textsubscript{i})}^\frac{|T\textsubscript{x\textsubscript{i}=v}|}{|T\textsubscript{X}|}$ H(T\textsubscript{x\textsubscript{i}=v})\hspace{0.5cm}(6)\\ 
+\hspace{1cm}IG(T\textsubscript{X}, x\textsubscript{i}) = H(T\textsubscript{X}) − $  \sum_{v=values(x\textsubscript{i})}^\frac{|T\textsubscript{x\textsubscript{i}=v}|}{|T\textsubscript{X}|}$ H(T\textsubscript{x\textsubscript{i}=v})\hspace{0.5cm}(4)\\ 
 with entropy :
 \newline
 \par
-\hspace{1cm}H(T) = $−p_{+}(T) log_{2} p_{+}(T) − p_{−}(T) log_{2} p_{−}(T)$\hspace{1.25cm}(7)\\
+\hspace{1cm}H(T) = $−p_{+}(T) log_{2} p_{+}(T) − p_{−}(T) log_{2} p_{−}(T)$\hspace{1.25cm}(5)\\
 \newline
 $p_{±}(T)$ is the probability of the training sample in the set T to be of the positive/negative class.Individual feature score is calculated and the highest feature according to their rank is selected for the next steps of classification.
 
 \subsection{Similar Classes Clustering}
 
 \subsubsection{Similarity Evaluation}
-Similarity measure[3] is defined as the distance between various data samples.Similarity represents the relationship between two data samples i.e, how alike they are whereas dissimilarity is the inverse of similarity.There are many existing methods which can be used to evaluate the difference between classes in terms of distance like Cosine, Euclidean distance , Pearson's corelation, Manhattan distance. Jaccard Distance.All these methods performs well in 2-dimension or 3-dimension space.However, there are many high dimension datasets, so to represent the difference between classes in the feature space we should consider both distribution and distance of data simultaneously.In proposed approach, similarity is obtained through  distance(between class distance) and distribution(within class, prior probability, number of samples) of data samples.Lesser the distance value more similar are the classes and vice-versa.Class Distance measure used in proposed approach is shown in equation (11).The measure details are as : 
+Similarity measure[3] is defined as the distance between various data samples.Similarity represents the relationship between two data samples i.e, how alike they are whereas dissimilarity is the inverse of similarity.There are many existing methods which can be used to evaluate the difference between classes in terms of distance like Cosine[3], Euclidean distance[3], Pearson's corelation[3], Manhattan distance[3], Jaccard Distance[3] which performs better in 2-dimension/3- dimension feature space.However, there are many high dimension datasets, so to represent the similarity difference between classes in the feature space we should consider both distribution and distance of data simultaneously.In proposed approach, similarity is obtained through class distance measure which includes distance(between class distance) and distribution(within class, prior probability, number of samples) of data samples.Class Distance measure used in proposed approach is shown in equation (9).Class distance measure represents a similarity value between every pair of classes.Higher the similarity value more similar are the classes and vice-versa.The measure details are as : 
 \newline
 1) $D_{ij}$ is the within class distance for $i_{th}$ class.
 
-\[\hspace{2cm}D_{i} = \frac{p_{i}}{n_{i}}(x_{s}-\frac{1}{n_{i}}\sum_{i=1}^{n_{i}}x_{i})^{2}\hspace{2.2cm}(8)\]\\  
+\[\hspace{2cm}D_{i} = \frac{p_{i}}{n_{i}}(x_{s}-\frac{1}{n_{i}}\sum_{i=1}^{n_{i}}x_{i})^{2}\hspace{2.1cm}(6)\]\\  
 where s = 1...n(total number of samples in $i_{th}$ class).
 \newline
+\\
 2) $M_{ij}$ is the between class distance between $i_{th}$ class and $j_{th}$ class in feature space.Squared euclidean distance is calculated between classes mean.
 \par
-\[M_{ij} = ((\mu_{i})-(\mu_{j}))^{2} = (\frac{1}{n_{i}}\sum_{i=1}^{n_{i}}x_{i} - \frac{1}{n_{j}}\sum_{j=1}^{n_{j}}x_{j})^{2}\hspace{0.7cm}(9)\] \\
+\[M_{ij} = ((\mu_{i})-(\mu_{j}))^{2} = (\frac{1}{n_{i}}\sum_{i=1}^{n_{i}}x_{i} - \frac{1}{n_{j}}\sum_{j=1}^{n_{j}}x_{j})^{2}\hspace{0.7cm}(7)\] \\
 The Distance formula is summed up as;
-\[Class\_Dist[i,j] = \frac{\sum_{j=1}^{C}\sum_{i=1}^{n}\frac{p\textsubscript{j}}{n\textsubscript{j}}*(x_{i}-\mu_{j})\textsuperscript{2}}{((\mu_{i})-(\mu_{j}))^{2}}\hspace{1cm}(10) \] \\  
+\[Class\_Dist[i,j] = \frac{\sum_{j=1}^{C}\sum_{i=1}^{n}\frac{p\textsubscript{j}}{n\textsubscript{j}}*(x_{i}-\mu_{j})\textsuperscript{2}}{((\mu_{i})-(\mu_{j}))^{2}}\hspace{1cm}(8) \] \\  
 \par 
-where $p_{j}$ is the prior probability of $j^{th}$ class , $n_{j}$ is the total number of samples in $j^{th}$ class, $x_{i}$ are the data points which belong to the respective $j^{th}$ class, $\mu_{i}$,  $\mu_{j}$ are the overall mean of $i^{th}$ and $j^{th}$ class respectively .The Class\_Dist[i,j] represents a similarity/dissimilarity value which considers both within and between class distance between every pair of class.The equation mentioned in (11) is represented as ;
+where $p_{j}$ is the prior probability of $j^{th}$ class , $n_{j}$ is the total number of samples in $j^{th}$ class, $x_{i}$ are the data points which belong to the respective $j^{th}$ class, $\mu_{i}$,  $\mu_{j}$ are the overall mean of $i^{th}$ and $j^{th}$ class respectively .The Class\_Dist[i,j] represents a similarity/dissimilarity value which considers both within and between class distance between every pair of class.The equation mentioned in (9) is represented as ;
 
-\[Class\_Dist[i,j]=\frac{Within-Class-Distance}{Between-Class-Distance}\hspace{0.5cm}(11)\] \\
-A Matrix is formed using Class\_Dist[i,j] values between every pair of classes.The values of matrix represents distance between every pair of class.A symmetric matrix is obtained as the distance of a class A to other class B will remain same as distance of B to A.Lesser the distance more similar are the classes.
+\[Class\_Dist[i,j]=\frac{Within-Class-Distance}{Between-Class-Distance}\hspace{0.5cm}(9)\] 
+A Matrix is formed using Class\_Dist[i,j] values between every pair of classes.The values of matrix represents similarity between every pair of class.A symmetric matrix is obtained as the distance of a class A to other class B will remain same as distance of B to A.
 
 \subsubsection{MST-KNN Graph} 
-MST-KNN[8] [9] approach is used for obtaining better classes clusters.
+MST-KNN[7][8] approach is used for obtaining better classes clusters.MST-KNN is a graph-based clustering algorithm.Given a weighted undirected graph (G), the MST-KNN algorithm starts by building a complete connected graph.MST-KNN graph contains the same number of nodes as the original graph and the intersection of the edges of the minimum spanning tree ($MST_{G}$) and the k-nearest neighbor graph ($kNN_{G}$) as set of edges .
+
 \begin{itemize}
 \item\textbf{Minimum spanning tree}
 \par
-The distance matrix is converted to a complete undirected graph.The graph contains classes as nodes and the distance values as the graph edges.Apply Minimum Spanning tree[12] algorithm on the graph obtained so as to cluster similar classes into different groups in the next step.Kruskal's minimum spanning tree algorithm is used in the proposed approach.  
+The distance matrix is converted to a complete undirected graph.The graph contains classes as nodes and the distance values as the graph edges.Apply Minimum Spanning tree algorithm on the graph obtained so as to cluster similar classes into different groups in the next step.Kruskal's minimum spanning tree algorithm is used in the proposed approach.  
 \item\textbf{K-Nearest Neighbor}
 \par
 KNN algorithm is applied on the distance matrix so as to obtain a KNN graph.It finds out its nearest neighbor by using the distance matrix.
@@ -178,7 +173,7 @@ MST and KNN graph edges are compared with each other and common edges are select
 \par
 Threshold edge deletion[1] step is applied in sub-clustering process where clusters are further divided into different clusters. If same clusters are obtained in sub-clustering process after applying both MST and KNN common edge step then edge deletion is done.Minimum spanning tree is generated for the respective classes and edge deletion is applied on the MST.To obtain similar classes group, delete the edge with value greater than $\delta,where$ 
 \par
-\[\hspace{2cm}\delta = \frac{\Delta W}{(N-1)}\hspace{3cm}(12)\] \\
+\[\hspace{2cm}\delta = \frac{\Delta W}{(N-1)}\hspace{3cm}(10)\] \\
 
 \par 
 where W is the total weight of the spanning tree and N is the total number of classes.
@@ -187,8 +182,14 @@ where W is the total weight of the spanning tree and N is the total number of cl
 \par
 Similar classes are clustered into different groups and SVM One-Against-All is applied on each node.Out of N classes, "k" groups are created where k\textgreater1, each group contains samples of M classes where M represents number of classes in a group (M\textgreater=1).For training k groups k classifiers are needed.If k size equals to 2, then only one classifier is needed.When OvA is applied for groups training, the ratio between positive and negative samples is found to be closer to 1.
 \end{itemize}
-The classification algorithm is explained below in detail:
+The classification algorithm is explained below in detail.
+\newline \\
+\vspace{0.2cm}
+\hrule
+\vspace{0.2cm}
+The procedure is as follow :
 \newline
+\vspace{0.2cm}
 \textit{\textbf{Procedure 1}}: Add training data samples to the root node.
 \newline \\
 \textit{\textbf{Procedure 2}}: Group similar classes into different clusters by similarity clustering method, "k" groups will be created in N class problem.
@@ -208,34 +209,36 @@ The classification algorithm is explained below in detail:
 \newline \\
 \textit{\textbf{Procedure 5}}: The new sub-nodes created are considered to be as multi-way tree new node. For one complete classification, \textbf{procedure 2} to \textbf{procedure 5} is continued until return.
 \newline
+\hrule
+\vspace{0.2cm}
 The structure of hierarchical multi-way tree is shown below using a 10 class pendigits problem ;
 \begin{figure}[h!] 
 \hspace{0.2cm}\includegraphics[scale=1,height=3in,width=3.5in]{pendigits_tree.jpg}
 \caption{Example: Pendigits(10 class) problem}  
 \end{figure}
 \par
-Initially all 10 classes(0 to 9) are present at root node.After applying all the steps, a multi-way tree is obtained.The tree represents different groups as Group A : 4, 6; Group B : 5, 0, 9, 8 ; and the rest classes 7, 2, 3, 1 as individual separate node.The root node contains following information: data samples, similarity clustering result and six classifiers each for one group. After training, six sub-nodes 1,2,3,4,5 and 6 are created. Each contains the samples in one group of the similarity clustering result.The data samples gets classified in top-down fashion.Each testing sample starts from the root node, classifier classifies it into sub-node.This process is continued until sample reaches to the leaf node.
+Initially all 10 classes(0 to 9) are present at root node.After applying all the steps, a multi-way tree is obtained.The tree represents different groups as Group A : 4, 6; Group B : 5, 0, 9, 8 ; and the rest classes 7, 2, 3, 1 as individual separate node.The root node contains following information: data samples, similarity clustering result and six classifiers each for one group. After training, six sub-nodes 1,2,3,4,5 and 6 are created.The data samples gets classified in top-down fashion.Each testing sample starts from the root node, classifier classifies it into sub-node.This process is continued until sample reaches to the leaf node.
 
 \section{Experiments}
 
 In this section, we present experimental results.The algorithm is implemented in
-R language using Rstudio on a PC with intel core i5 CPU (2.5GHz), 4GB RAM.RStudio is a open-source and free Integrated Development Environment for R.R is a programming language for statistical computing and graphics.Our proposed method is compared with the following methods:
+R language using Rstudio.RStudio is a open-source and free Integrated Development Environment for R.Our proposed approach is compared with the following strategies in respect with accuracy.The strategies are :
 \begin{itemize}
-\item One-against-rest.
-\item One-against-one.
+\item One-against-Rest.
+\item One-against-One.
 \item Binary Tree SVM (BTS).
 \item Hierarchical SVM-MST method.
 \end{itemize}
-Our proposed method is compared with the above mentioned methods in respect with accuracy.
 
 \subsection{Experiments and data result}
-For experimentation, Nine multiclass datasets are taken from UCI Machine Learning Repository.A brief description of the datasets is summarized in Table I.Samples are divided into 70-30 ratio in which 70\% samples belong to Training samples and 30\% samples belong to Testing samples.We considered K-fold testing method in which K is 10.The datasets are divided into three categories : First category is High range, where instances and classes are high, Second category is Mid range in which instances are from between 1000 and 10000 and classes low to high, Third category is Low range where instances are less i.e, less than 1000 and classes from low to high.
+For experimentation, Nine multiclass datasets are taken from UCI Machine Learning Repository.A brief description of the datasets is summarized in Table I.Letter and Pendigits dataset are from High Range category with large number of instances and classes. Letter contains 26 classes and has 20,000 samples where each sample has 18 features.Pendigits dataset has 10 classes, 10992 instances and 17 features.Satimage, Pageblocks, Optdigits, Segment from Mid Range category contains classes in range 5 to 10, instances in range between 2000 to 10,000.Vowel, KDD Synthetic, soybean and vehicle dataset from Low Range category contains classes from in range from 4 to 19, instances below 1000. 
+Samples are divided into 70-30 ratio in which 70\% samples belong to Training samples and 30\% samples belong to Testing samples.We considered K-fold testing method in which K is 10.The datasets are divided into three categories : First category is High range, where instances and classes are high, Second category is Mid range in which instances are from between 1000 and 10000 and classes low to high, Third category is Low range where instances are less i.e, less than 1000 and classes from low to high.
 
 \subsection{Analysis of experiment results}
 Table I describes about dataset used in the experiment.Tables II, III, IV describes about k-fold cross-validation results on all three categories where k = 10.Table V represents overall accuracy results one from each category.The Overall accuracy is evaluated using True Positive and True Negatives.\\
-\par Overall Accuracy = $\frac{TP + TN}{TP + TN +FP + FN}$\hspace{2cm}(13) \\
+\par \hspace{0.5cm}Overall Accuracy = $\frac{TP + TN}{TP + TN +FP + FN}$\hspace{1.5cm}(11) \\
 \newline
-We have N classes, then confusion matrix would be an N × N matrix, where row represents True Classes and Columns represents Predicted classes. Each element {i,j} of the matrix would be the number of items with True Class i that were classified as being in Class j.
+We have N classes, then confusion matrix would be an N * N matrix, where row represents True Classes and Columns represents Predicted classes.Each element {i,j} of the matrix would be the number of items with True Class i that were classified as being in Class j.
 \par
 
 \begin{table}[h!]
@@ -374,46 +377,31 @@ In this paper, we proposed a new approach using multi-way tree and similarity cl
 
 \begin{thebibliography}{99}
 
-\bibitem{} Chao DONG, Bo ZHOU and Jinglu HU { ,“A Hierarchical SVM Based Multi-class Classification by Using Similarity Clustering ”}, International Joint Conference on Neural Networks (IJCNN), July 2015. 
+\bibitem{} Bo ZHOU, Chao DONG and Jinglu HU{,``A Hierarchical SVM Based Multi-class Classification by Using Similarity Clustering ”}, International Joint Conference on Neural Networks (IJCNN), July 2015. 
 
-\bibitem{} Tang, J., Alelyani, S., and Liu, H. { , "Feature selection for classification: a review"}, in Aggarawal, C.C. Ed.2014.
+\bibitem{} Tang, J., Alelyani, S., and Liu, H.{,``Feature selection for classification: a review"}, in Aggarawal, C.C. Ed.2014.
 
-\bibitem{}  Anil Kumar Patidar, Jitendra Agrawal, Nishchol Mishra { ,“Analysis of Different Similarity Measure Functions and their Impacts on Shared Nearest Neighbor Clustering Approach” }, International Journal of Computer Applications, February 2012.
+\bibitem{}  Jitendra Agrawal, Anil Kumar Patidar, Nishchol Mishra{,``Analysis of Different Similarity Measure Functions and their Impacts on Shared Nearest Neighbor Clustering Approach”}, International Journal of Computer Applications, February 2012.
 
-\bibitem{} Chih-Wei Hsu and Chih-Jen Lin { ,“A Comparison of Methods for Multi-class Support Vector Machines”},Department of Computer Science and Information Engineering National Taiwan University ,2001.
 
-\bibitem{} Mohamed Aly  { ,“Survey On Multiclass Classification Method ”},November 2005.
+\bibitem{} S. Kumar, J. Ghosh, M.M. Crawford{,``Hierarchical fusion of multiple classifiers for hyperspectral data analysis, Pattern Analysis \& Applications, Vol 5"}, 2002.
 
-\bibitem{} S. Kumar, J. Ghosh, M.M. Crawford { ,"Hierarchical fusion of multiple classifiers for hyperspectral data analysis, Pattern Analysis \& Applications, 5:210-220 "}, 2002.
+\bibitem{} J.G.Dy, V. Vural{,``A hierarchical method for multi-class support vector machines. In Proceedings of the Twenty-First International Conference on Machine Learning"}, 2004.
 
-\bibitem{} V. Vural, J.G. Dy { ,"A hierarchical method for multi-class support vector machines. In Proceedings of the Twenty-First International Conference on Machine Learning, 105-112 "}, 2004.
+\bibitem{} Mohamed Aly{,``Survey On Multiclass Classification Method ”},November 2005.
 
-\bibitem{} Ahmed Shamsul Arefin, Carlos Riveros, Regina Berretta, Pablo Moscato { ,“ kNN-MST-Agglomerative: A Fast and Scalable Graph-based Data Clustering Approach on GPU.”}, 7th International Conference on Computer Science \& Education (ICCSE 2012) Melbourne, Australia, July 14-17, 2012.
+\bibitem{} Carlos Riveros, Ahmed Shamsul Arefin, Pablo Moscato, Regina Berretta{ ,``kNN-MST-Agglomerative: A Fast and Scalable Graph-based Data Clustering Approach on GPU.”}, 7th International Conference on Computer Science \& Education (ICCSE 2012) Melbourne, Australia, July 14-17, 2012.
 
-\bibitem{} Ahmed Shamsul Arefin, Carlos Riveros, Regina Berretta, Pablo Moscato { ,“The MST-kNN with Paracliques”}, The Priority Research Centre for Bioinformatics Biomarker Discovery and Information-based Medicine University of Newcastle, February 2015.
+\bibitem{} Ahmed Shamsul Arefin, Carlos Riveros, Regina Berretta, Pablo Moscato { ,``The MST-kNN with Paracliques”}, The Priority Research Centre for Bioinformatics Biomarker Discovery and Information-based Medicine University of Newcastle, February 2015.
 
-\bibitem{} Xiaochun Wang, Xiali Wang and D. Mitchell Wilkes {, “A divide-and conquer
+\bibitem{} Xiaochun Wang, Xiali Wang and D. Mitchell Wilkes {, ``A divide-and conquer
 approach for minimum spanning tree-based clustering,”} IEEE  Trans. Knowledge and Data Engg., vol. 21, 2009.
 
-\bibitem{} Volkan Vural, Jennifer G. Dy {,"A Hierarchical Method for Multi-Class Support Vector Machines"}, 2004.
+\bibitem{} Volkan Vural, Jennifer G. Dy {,``A Hierarchical Method for Multi-Class Support Vector Machines"}, 2004.
 
-\bibitem{} Prasanta K. Jana{,"An Efficient Minimum Spanning Tree based Clustering Algorithm"}, International Conference on Methods and Models in Computer Science, 2009.
-
-\bibitem{}Ben Fei and Jinbai Liu{,"Binary Tree of SVM: A New Fast Multiclass
+\bibitem{} Ben Fei and Jinbai Liu {, ``Binary Tree of SVM: A New Fast Multiclass
 Training and Classification Algorithm"},IEEE TRANSACTIONS ON NEURAL NETWORKS, VOL. 17, NO. 3, MAY 2006.
 
-\bibitem{} https://www.rstudio.com/online-learning/R
-
-\bibitem{} {,"Introduction to R"} https://www.datacamp.com
-
-\bibitem{} https://archive.ics.uci.edu/ml/datasets.html
-
-\bibitem{} https://cran.r-project.org/web/packages/index.html
-
-
 \end{thebibliography}
-
-
-
 
 \end{document}
